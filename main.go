@@ -1,11 +1,18 @@
 package main
 
 import (
-	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+	"image/color"
 	"log"
 )
+
+type GameConfig struct {
+	width, height int
+	title         string
+}
+
+var config GameConfig
 
 type Game struct{}
 
@@ -14,19 +21,53 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	ebitenutil.DebugPrint(screen, "Hello, World!")
+	vector.DrawFilledRect(
+		screen,
+		0,
+		0,
+		float32(config.width),
+		float32(config.height),
+		color.Color(
+			color.RGBA{
+				R: 255,
+				G: 255,
+				B: 255,
+				A: 1,
+			},
+		),
+		true,
+	)
+	vector.DrawFilledCircle(
+		screen,
+		0,
+		0,
+		float32(300),
+		color.Color(
+			color.RGBA{
+				R: 1,
+				G: 1,
+				B: 1,
+				A: 255,
+			},
+		),
+		true,
+	)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 320, 240
+	return config.width, config.height
 }
 
 func main() {
-	//TIP <p>Press <shortcut actionId="ShowIntentionActions"/> when your caret is at the underlined text
-	// to see how GoLand suggests fixing the warning.</p><p>Alternatively, if available, click the lightbulb to view possible fixes.</p>
-	fmt.Println("Runnin the shrimp")
-	ebiten.SetWindowSize(1000, 600)
-	ebiten.SetWindowTitle("Hello, World!")
+	config = GameConfig{
+		width:  1000,
+		height: 600,
+		title:  "Shrimp Mode",
+	}
+	// setup
+	ebiten.SetWindowSize(config.width, config.height)
+	ebiten.SetWindowTitle(config.title)
+
 	if err := ebiten.RunGame(&Game{}); err != nil {
 		log.Fatal(err)
 	}
