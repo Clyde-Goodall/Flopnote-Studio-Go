@@ -1,5 +1,15 @@
 package main
 
+import (
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+)
+
+type WindowConfig struct {
+	width, height int
+	title         string
+}
+
 type ElementTypeEnum int
 
 const (
@@ -20,11 +30,84 @@ func (e ElementTypeEnum) String() string {
 	}[e]
 }
 
+type StickyAnchorEnum int
+
+const (
+	TopLeft = iota
+	TopRight
+	BottomLeft
+	BottomRight
+)
+
+func (e StickyAnchorEnum) String() string {
+	return [...]string{
+		"top_left",
+		"top_right",
+		"bottom_left",
+		"bottom_right",
+	}[e]
+}
+
 type Element struct {
+	screen             *ebiten.Image
 	context            *Element
 	elementType        ElementTypeEnum
 	anchorX, anchorY   int
+	width, height      int
 	paddingX, paddingY int
 	autoScale          bool
+	sticky             bool
 	children           []Element
+	theme              ElementColorPreset
+	stickyAnchorSticky StickyAnchorEnum
+}
+
+func (el Element) Draw() {
+	switch el.elementType {
+	case Container:
+		el.DrawContainer()
+		break
+	case DecoratedContainer:
+		break
+	case Button:
+		break
+	case RoundedButton:
+		break
+	case Text:
+		break
+	default:
+		panic("Invalid element type")
+	}
+}
+
+// Will determine whether element will scale with window size proportionally
+// If sticky, disregards scaling bool so it doesn't conflict with resizing
+func (el Element) DrawContainer() {
+	actualWidth := float32(el.width)
+	actualHeight := float32(el.height)
+	if el.autoScale && !el.sticky {
+		actualWidth, actualHeight = autoScalingCalculation(el)
+	}
+	if el.sticky { // no need to check for autoScale, as it should override autoScale
+
+	}
+
+	vector.DrawFilledRect(
+		el.screen,
+		float32(el.anchorX),
+		float32(el.anchorY),
+		actualWidth,
+		actualHeight,
+		el.theme.backgroundColor,
+		true,
+	)
+}
+
+func autoScalingCalculation(el Element) (float32, float32) {
+	ww, wh := ebiten.WindowSize()
+	proportionX := ww / el.width
+	proportionY := wh / el.height
+	var actualWidth = proportionX * el.width
+	var actualHeight = proportionY * el.height
+	return float32(actualWidth), float32(actualHeight)
 }

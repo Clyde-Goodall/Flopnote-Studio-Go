@@ -11,7 +11,7 @@ type ElementSizing struct {
 	pack    bool
 }
 
-func (ctx Element) RoundedButton(
+func (el Element) RoundedButton(
 	screen *ebiten.Image,
 	label string,
 	callback func(),

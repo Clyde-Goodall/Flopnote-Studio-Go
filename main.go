@@ -2,19 +2,15 @@ package main
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/vector"
-	"image/color"
 	"log"
 )
 
-var UI =
-
-type GameConfig struct {
+type WindowConfig struct {
 	width, height int
 	title         string
 }
 
-var config GameConfig
+var config WindowConfig
 
 type Game struct{}
 
@@ -23,22 +19,7 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	vector.DrawFilledRect(
-		screen,
-		0,
-		0,
-		float32(config.width),
-		float32(config.height),
-		color.Color(
-			color.RGBA{
-				R: 255,
-				G: 255,
-				B: 255,
-				A: 1,
-			},
-		),
-		true,
-	)
+
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -46,7 +27,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 }
 
 func main() {
-	config = GameConfig{
+	config = WindowConfig{
 		width:  1000,
 		height: 600,
 		title:  "Shrimp Mode",
