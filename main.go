@@ -7,6 +7,8 @@ import (
 	"log"
 )
 
+var UI =
+
 type GameConfig struct {
 	width, height int
 	title         string
@@ -33,21 +35,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 				G: 255,
 				B: 255,
 				A: 1,
-			},
-		),
-		true,
-	)
-	vector.DrawFilledCircle(
-		screen,
-		0,
-		0,
-		float32(300),
-		color.Color(
-			color.RGBA{
-				R: 1,
-				G: 1,
-				B: 1,
-				A: 255,
 			},
 		),
 		true,
